@@ -3,16 +3,16 @@ import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.Graphics2D
 import javax.swing.JPanel
-import kotlin.experimental.and
 import kotlin.experimental.or
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import kotlin.random.Random
 
 class WindowDetectionTest : JPanel() {
-    val points = ArrayList<Vertex>()
-    val pointCodes = ArrayList<Byte>()
+    private val points = ArrayList<Vertex>()
+    private val pointCodes = ArrayList<Byte>()
     var windowHeight = 100
     var windowWidth = 200
     var windowPosY = 0
@@ -21,12 +21,6 @@ class WindowDetectionTest : JPanel() {
 
     init {
         preferredSize = Dimension(640, 640)
-        repeat(60) {
-            points.add(Vertex.random(-450.0, 450.0))
-        }
-        repeat(points.size) {
-            pointCodes.add(0)
-        }
     }
 
     private fun drawFigureFrom(g: Graphics2D, p1: Vertex, p2: Vertex) {
@@ -136,5 +130,21 @@ class WindowDetectionTest : JPanel() {
         val gg = g as Graphics2D
         background = Color.BLACK
         drawFigureFrom(gg, Vertex(50.0, 50.0, 50.0), Vertex(40.0, 40.0, 40.0))
+    }
+
+    fun generateRandomVertices(count: Int) {
+        points.clear()
+        repeat(count) {
+            val from = -450.0
+            val until = 450.0
+            val randomUntil: Double
+            val intervalLength: Double = Random.nextDouble(200.0, 400.0)
+            val randomFrom: Double = Random.nextDouble(from, until)
+            randomUntil = if (intervalLength + randomFrom > 450) 450.0 else intervalLength + randomFrom
+            points.add(Vertex.random(randomFrom, randomUntil))
+        }
+        repeat(points.size) {
+            pointCodes.add(0)
+        }
     }
 }

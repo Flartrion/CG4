@@ -14,29 +14,9 @@ class MainWindow : JFrame() {
         val pointInput = JPanel()
         pointInput.layout = BoxLayout(pointInput, BoxLayout.PAGE_AXIS)
 
-        pointData.addElement(Vertex(-150.0, 0.0, 150.0))
-        pointData.addElement(Vertex(-150.0, 5.0, 50.0))
-        pointData.addElement(Vertex(-150.0, 5.0, -50.0))
-        pointData.addElement(Vertex(-150.0, 0.0, -150.0))
-
-        pointData.addElement(Vertex(-50.0, 50.0, 150.0))
-        pointData.addElement(Vertex(-50.0, 50.0, 50.0))
-        pointData.addElement(Vertex(-50.0, 50.0, -50.0))
-        pointData.addElement(Vertex(-50.0, 50.0, -150.0))
-
-        pointData.addElement(Vertex(50.0, 50.0, 150.0))
-        pointData.addElement(Vertex(50.0, 50.0, 50.0))
-        pointData.addElement(Vertex(50.0, 50.0, -50.0))
-        pointData.addElement(Vertex(50.0, 50.0, -150.0))
-
-        pointData.addElement(Vertex(150.0, 0.0, 150.0))
-        pointData.addElement(Vertex(150.0, 50.0, 50.0))
-        pointData.addElement(Vertex(150.0, 50.0, -50.0))
-        pointData.addElement(Vertex(150.0, 0.0, -150.0))
-
-
+        val sectionCount = JTextField("15")
         pointInput.add(JLabel("Количество отрезков: ", 0))
-        pointInput.add(JTextField("15"))
+        pointInput.add(sectionCount)
         pointInput.add(pointEditButton)
 
         val rectangleAttributes = JPanel()
@@ -48,11 +28,6 @@ class MainWindow : JFrame() {
         val positionY = JTextField("10 ")
         val positionZ = JTextField("10")
         val buildRectangle = JButton("Построить")
-
-        buildRectangle.addActionListener {
-            bezierSurface.rotateOnX(length.text.toDouble())
-            repaint()
-        }
 
         rectangleAttributes.add(JLabel("Длина: ", 0))
         rectangleAttributes.add(length)
@@ -68,6 +43,11 @@ class MainWindow : JFrame() {
         rectangleAttributes.add(positionZ)
 
         rectangleAttributes.add(buildRectangle)
+
+        pointEditButton.addActionListener {
+            bezierSurface.generateRandomVertices(sectionCount.text.toInt() * 2)
+            repaint()
+        }
 
         val topLabels = JPanel()
         topLabels.layout = GridLayout(1, 2)

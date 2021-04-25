@@ -4,7 +4,7 @@ import javax.swing.*
 
 class MainWindow : JFrame() {
     private val pointData = DefaultListModel<Vertex>()
-    private val bezierSurface = BezierSurface()
+    private val bezierSurface = WindowDetectionTest()
     private val pointEditButton = JButton("Отобразить")
 
     init {
@@ -83,9 +83,9 @@ class MainWindow : JFrame() {
         inputPanel.add(inputZone, BorderLayout.SOUTH)
 
         for (i in 0 until pointData.size()) {
-            bezierSurface.contourPoints.add(pointData[i])
+           // bezierSurface.points.add(pointData[i])
         }
-        bezierSurface.calculatePoints()
+        //bezierSurface.calculatePoints()
 
         this.add(inputPanel, BorderLayout.NORTH)
         this.defaultCloseOperation = EXIT_ON_CLOSE

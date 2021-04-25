@@ -1,3 +1,5 @@
+import kotlin.random.Random
+
 data class Vertex(var x: Double, var y: Double, var z: Double) {
 
     operator fun plus(b: Vertex) = Vertex(x + b.x, y + b.y, z + b.z)
@@ -12,5 +14,14 @@ data class Vertex(var x: Double, var y: Double, var z: Double) {
 
     override fun hashCode(): Int {
         return super.hashCode()
+    }
+
+    companion object {
+        fun random(from: Double, until: Double): Vertex =
+            Vertex(
+                Random.nextDouble(from, until),
+                Random.nextDouble(from, until),
+                Random.nextDouble(from, until)
+            )
     }
 }

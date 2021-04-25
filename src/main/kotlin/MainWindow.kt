@@ -5,7 +5,7 @@ import javax.swing.*
 class MainWindow : JFrame() {
     private val pointData = DefaultListModel<Vertex>()
     private val pointList = JList<Vertex>()
-    private val bezierSurface = BezierSurface()
+    private val bezierSurface = WindowDetectionTest()
     private val pointEditButton = JButton("Изменить")
 
     init {
@@ -43,11 +43,11 @@ class MainWindow : JFrame() {
                 PointChangeDialogue(this) {
                     pointData[pointList.selectedIndex] = it
                 }
-            bezierSurface.contourPoints.clear()
+            bezierSurface.points.clear()
             for (i in 0 until pointData.size()) {
-                bezierSurface.contourPoints.add(pointData[i])
+                bezierSurface.points.add(pointData[i])
             }
-            bezierSurface.calculatePoints()
+            //bezierSurface.calculatePoints()
             repaint()
         }
 
@@ -63,11 +63,11 @@ class MainWindow : JFrame() {
         val rotationYСonfirm = JButton("Повернуть")
 
         rotationXСonfirm.addActionListener {
-            bezierSurface.rotateOnX(rotationX.text.toDouble())
+            //bezierSurface.rotateOnX(rotationX.text.toDouble())
             repaint()
         }
         rotationYСonfirm.addActionListener {
-            bezierSurface.rotateOnY(rotationY.text.toDouble())
+            //bezierSurface.rotateOnY(rotationY.text.toDouble())
             repaint()
         }
 
@@ -92,9 +92,9 @@ class MainWindow : JFrame() {
         inputPanel.add(inputZone, BorderLayout.SOUTH)
 
         for (i in 0 until pointData.size()) {
-            bezierSurface.contourPoints.add(pointData[i])
+           // bezierSurface.points.add(pointData[i])
         }
-        bezierSurface.calculatePoints()
+        //bezierSurface.calculatePoints()
 
         this.add(inputPanel, BorderLayout.NORTH)
         this.defaultCloseOperation = EXIT_ON_CLOSE

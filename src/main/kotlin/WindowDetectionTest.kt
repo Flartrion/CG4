@@ -23,6 +23,17 @@ class WindowDetectionTest : JPanel() {
         preferredSize = Dimension(640, 640)
     }
 
+    fun regenerate() {
+        pointCodes.clear()
+        points.clear()
+        repeat(60) {
+            points.add(Vertex.random(-450.0, 450.0))
+        }
+        repeat(points.size) {
+            pointCodes.add(0)
+        }
+    }
+
     private fun drawFigureFrom(g: Graphics2D, p1: Vertex, p2: Vertex) {
         val axis = p2 - p1
         val phi = atan2(axis.y, axis.x)
@@ -94,13 +105,13 @@ class WindowDetectionTest : JPanel() {
         g.drawLine(limitWest, limitSouth, limitWest, limitNorth)
 
         for (i in points.indices) {
-            if (points[i].x < limitWest)
+            if (resultMatrix[i + 1, 1] < limitWest)
                 pointCodes[i] = (pointCodes[i] + 8.toByte()).toByte()
-            else if (points[i].x > limitEast)
+            else if (resultMatrix[i + 1, 1] > limitEast)
                 pointCodes[i] = (pointCodes[i] + 4.toByte()).toByte()
-            if (points[i].y > limitSouth)
+            if (resultMatrix[i + 1, 2] > limitSouth)
                 pointCodes[i] = (pointCodes[i] + 2.toByte()).toByte()
-            else if (points[i].y < limitNorth)
+            else if (resultMatrix[i + 1, 2] < limitNorth)
                 pointCodes[i] = (pointCodes[i] + 1.toByte()).toByte()
         }
 
@@ -109,18 +120,63 @@ class WindowDetectionTest : JPanel() {
 
 
         for (i in 0 until points.size step 2) {
-            g.color = Color.GRAY
-            if ((pointCodes[i].or(pointCodes[i + 1])) == 0.toByte()) {
-                g.color = Color.WHITE
-            } else {
-
+            when {
+                (pointCodes[i].or(pointCodes[i + 1])) == 0.toByte() -> {
+                    g.color = Color(0, 200, 0)
+                    g.drawLine(
+                        resultMatrix[i + 1, 1].roundToInt(),
+                        resultMatrix[i + 1, 2].roundToInt(),
+                        resultMatrix[i + 2, 1].roundToInt(),
+                        resultMatrix[i + 2, 2].roundToInt()
+                    )
+                }
+                (pointCodes[i].and(pointCodes[i + 1])) != 0.toByte() -> {
+                    g.color = Color(200, 0, 200)
+                    g.drawLine(
+                        resultMatrix[i + 1, 1].roundToInt(),
+                        resultMatrix[i + 1, 2].roundToInt(),
+                        resultMatrix[i + 2, 1].roundToInt(),
+                        resultMatrix[i + 2, 2].roundToInt()
+                    )
+                }
+                else -> {
+                    val deltaX = resultMatrix[i + 2, 1] - resultMatrix[i + 1, 1]
+                    val deltaY = resultMatrix[i + 2, 2] - resultMatrix[i + 1, 2]
+                    val t = ArrayList<Double>()
+                    val tt = ArrayList<Double>()
+                    t += (limitWest - resultMatrix[i + 1, 1]) / deltaX
+                    t += (limitEast - resultMatrix[i + 1, 1]) / deltaX
+                    t += (limitNorth - resultMatrix[i + 1, 2]) / deltaY
+                    t += (limitSouth - resultMatrix[i + 1, 2]) / deltaY
+                    for (i in t) {
+                        if (i in 0.0..1.0)
+                            tt.add(i)
+                    }
+                    if (tt.size == 2) {
+                        g.color = Color.WHITE
+                        g.drawLine(
+                            resultMatrix[i + 1, 1].roundToInt(),
+                            resultMatrix[i + 1, 2].roundToInt(),
+                            (resultMatrix[i + 1, 1] + deltaX * tt.minOrNull()!!).roundToInt(),
+                            (resultMatrix[i + 1, 2] + deltaY * tt.minOrNull()!!).roundToInt()
+                        )
+                        g.drawLine(
+                            resultMatrix[i + 1, 1].roundToInt(),
+                            resultMatrix[i + 1, 2].roundToInt(),
+                            (resultMatrix[i + 1, 1] + deltaX * tt.maxOrNull()!!).roundToInt(),
+                            (resultMatrix[i + 1, 2] + deltaY * tt.maxOrNull()!!).roundToInt()
+                        )
+                        g.color = Color(100,100,0)
+                        g.drawLine(
+                            (resultMatrix[i + 1, 1] + deltaX * tt.minOrNull()!!).roundToInt(),
+                            (resultMatrix[i + 1, 2] + deltaY * tt.minOrNull()!!).roundToInt(),
+                            (resultMatrix[i + 1, 1] + deltaX * tt.maxOrNull()!!).roundToInt(),
+                            (resultMatrix[i + 1, 2] + deltaY * tt.maxOrNull()!!).roundToInt()
+                        )
+                    }
+                    Color.WHITE
+                }
             }
-            g.drawLine(
-                resultMatrix[i + 1, 1].roundToInt(),
-                resultMatrix[i + 1, 2].roundToInt(),
-                resultMatrix[i + 2, 1].roundToInt(),
-                resultMatrix[i + 2, 1].roundToInt()
-            )
         }
     }
 

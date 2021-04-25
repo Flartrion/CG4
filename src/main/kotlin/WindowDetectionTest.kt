@@ -19,7 +19,6 @@ class WindowDetectionTest : JPanel() {
     var windowPosY = 0
     var windowPosX = 0
 
-
     init {
         preferredSize = Dimension(640, 640)
     }
@@ -65,7 +64,6 @@ class WindowDetectionTest : JPanel() {
         objectMatrix[points.size + 4, 2] = 0.0
         objectMatrix[points.size + 4, 3] = 100.0
         objectMatrix[points.size + 4, 4] = 1.0
-
 
         val preparationTransform = TransformMatrixFabric.translate(-p1.x, -p1.y, -p1.z) *
                 TransformMatrixFabric.rotateZ(-phi) *
@@ -115,10 +113,6 @@ class WindowDetectionTest : JPanel() {
             else if (resultMatrix[i + 1, 2] < limitNorth)
                 pointCodes[i] = (pointCodes[i] + 1.toByte()).toByte()
         }
-
-
-        //g.color = Color.WHITE
-
 
         for (i in 0 until points.size step 2) {
             when {

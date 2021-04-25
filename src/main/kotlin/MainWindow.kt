@@ -3,8 +3,7 @@ import java.awt.GridLayout
 import javax.swing.*
 
 class MainWindow : JFrame() {
-    private val pointData = DefaultListModel<Vertex>()
-    private val bezierSurface = WindowDetectionTest()
+    private val windowDetection = WindowDetectionTest()
     private val pointEditButton = JButton("Отобразить")
 
     init {
@@ -22,15 +21,14 @@ class MainWindow : JFrame() {
         val rectangleAttributes = JPanel()
         rectangleAttributes.layout = GridLayout(7, 2)
 
-        val length = JTextField("5")
+        val height = JTextField("5")
         val width = JTextField("5")
         val positionX = JTextField("10")
-        val positionY = JTextField("10 ")
-        val positionZ = JTextField("10")
+        val positionY = JTextField("10")
         val buildRectangle = JButton("Построить")
 
         rectangleAttributes.add(JLabel("Длина: ", 0))
-        rectangleAttributes.add(length)
+        rectangleAttributes.add(height)
         rectangleAttributes.add(JLabel("Ширина: ", 0))
         rectangleAttributes.add(width)
         rectangleAttributes.add(JLabel("Позиция", 0))
@@ -39,13 +37,19 @@ class MainWindow : JFrame() {
         rectangleAttributes.add(positionX)
         rectangleAttributes.add(JLabel("Y: ", 0))
         rectangleAttributes.add(positionY)
-        rectangleAttributes.add(JLabel("Z: ", 0))
-        rectangleAttributes.add(positionZ)
 
         rectangleAttributes.add(buildRectangle)
 
+        buildRectangle.addActionListener {
+            windowDetection.windowHeight = height.text.toInt()
+            windowDetection.windowWidth = width.text.toInt()
+            windowDetection.windowPosX = positionX.text.toInt()
+            windowDetection.windowPosY = positionY.text.toInt()
+            repaint()
+        }
+
         pointEditButton.addActionListener {
-            bezierSurface.generateRandomVertices(sectionCount.text.toInt() * 2)
+            windowDetection.generateRandomVertices(sectionCount.text.toInt() * 2)
             repaint()
         }
 
@@ -62,16 +66,11 @@ class MainWindow : JFrame() {
         inputPanel.add(topLabels, BorderLayout.NORTH)
         inputPanel.add(inputZone, BorderLayout.SOUTH)
 
-        for (i in 0 until pointData.size()) {
-           // bezierSurface.points.add(pointData[i])
-        }
-        //bezierSurface.calculatePoints()
-
         this.add(inputPanel, BorderLayout.NORTH)
         this.defaultCloseOperation = EXIT_ON_CLOSE
         this.title = "Smooth criminal"
         this.isResizable = true
-        this.add(bezierSurface, BorderLayout.CENTER)
+        this.add(windowDetection, BorderLayout.CENTER)
         this.pack()
         this.setLocationRelativeTo(null)
         this.isVisible = true

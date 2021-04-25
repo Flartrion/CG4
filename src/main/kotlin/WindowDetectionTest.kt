@@ -3,6 +3,7 @@ import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.Graphics2D
 import javax.swing.JPanel
+import kotlin.experimental.and
 import kotlin.experimental.or
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -142,39 +143,56 @@ class WindowDetectionTest : JPanel() {
                 else -> {
                     val deltaX = resultMatrix[i + 2, 1] - resultMatrix[i + 1, 1]
                     val deltaY = resultMatrix[i + 2, 2] - resultMatrix[i + 1, 2]
-                    val t = ArrayList<Double>()
                     val tt = ArrayList<Double>()
-                    t += (limitWest - resultMatrix[i + 1, 1]) / deltaX
-                    t += (limitEast - resultMatrix[i + 1, 1]) / deltaX
-                    t += (limitNorth - resultMatrix[i + 1, 2]) / deltaY
-                    t += (limitSouth - resultMatrix[i + 1, 2]) / deltaY
-                    for (i in t) {
-                        if (i in 0.0..1.0)
-                            tt.add(i)
+                    var t = (limitWest - resultMatrix[i + 1, 1]) / deltaX
+                    if ((resultMatrix[i + 1, 2] + t * deltaY).roundToInt() in limitNorth..limitSouth)
+                        tt += t
+                    t = (limitEast - resultMatrix[i + 1, 1]) / deltaX
+                    if ((resultMatrix[i + 1, 2] + t * deltaY).roundToInt() in limitNorth..limitSouth)
+                        tt += t
+                    t = (limitNorth - resultMatrix[i + 1, 2]) / deltaY
+                    if ((resultMatrix[i + 1, 1] + t * deltaX).roundToInt() in limitWest..limitEast)
+                        tt += t
+                    t = (limitSouth - resultMatrix[i + 1, 2]) / deltaY
+                    if ((resultMatrix[i + 1, 1] + t * deltaX).roundToInt() in limitWest..limitEast)
+                        tt += t
+
+                    when (tt.size) {
+                        2 -> {
+                            g.color = Color.WHITE
+                            g.drawLine(
+                                resultMatrix[i + 1, 1].roundToInt(),
+                                resultMatrix[i + 1, 2].roundToInt(),
+                                (resultMatrix[i + 1, 1] + deltaX * tt.minOrNull()!!).roundToInt(),
+                                (resultMatrix[i + 1, 2] + deltaY * tt.minOrNull()!!).roundToInt()
+                            )
+                            g.drawLine(
+                                resultMatrix[i + 2, 1].roundToInt(),
+                                resultMatrix[i + 2, 2].roundToInt(),
+                                (resultMatrix[i + 1, 1] + deltaX * tt.maxOrNull()!!).roundToInt(),
+                                (resultMatrix[i + 1, 2] + deltaY * tt.maxOrNull()!!).roundToInt()
+                            )
+                            g.color = Color(100, 100, 0)
+                            g.drawLine(
+                                (resultMatrix[i + 1, 1] + deltaX * tt.minOrNull()!!).roundToInt(),
+                                (resultMatrix[i + 1, 2] + deltaY * tt.minOrNull()!!).roundToInt(),
+                                (resultMatrix[i + 1, 1] + deltaX * tt.maxOrNull()!!).roundToInt(),
+                                (resultMatrix[i + 1, 2] + deltaY * tt.maxOrNull()!!).roundToInt()
+                            )
+                        }
+                        1 -> {
+                            println(tt)
+                        }
+                        else -> {
+                            g.color = Color.WHITE
+                            g.drawLine(
+                                resultMatrix[i + 1, 1].roundToInt(),
+                                resultMatrix[i + 1, 2].roundToInt(),
+                                resultMatrix[i + 2, 1].roundToInt(),
+                                resultMatrix[i + 2, 2].roundToInt()
+                            )
+                        }
                     }
-                    if (tt.size == 2) {
-                        g.color = Color.WHITE
-                        g.drawLine(
-                            resultMatrix[i + 1, 1].roundToInt(),
-                            resultMatrix[i + 1, 2].roundToInt(),
-                            (resultMatrix[i + 1, 1] + deltaX * tt.minOrNull()!!).roundToInt(),
-                            (resultMatrix[i + 1, 2] + deltaY * tt.minOrNull()!!).roundToInt()
-                        )
-                        g.drawLine(
-                            resultMatrix[i + 1, 1].roundToInt(),
-                            resultMatrix[i + 1, 2].roundToInt(),
-                            (resultMatrix[i + 1, 1] + deltaX * tt.maxOrNull()!!).roundToInt(),
-                            (resultMatrix[i + 1, 2] + deltaY * tt.maxOrNull()!!).roundToInt()
-                        )
-                        g.color = Color(100,100,0)
-                        g.drawLine(
-                            (resultMatrix[i + 1, 1] + deltaX * tt.minOrNull()!!).roundToInt(),
-                            (resultMatrix[i + 1, 2] + deltaY * tt.minOrNull()!!).roundToInt(),
-                            (resultMatrix[i + 1, 1] + deltaX * tt.maxOrNull()!!).roundToInt(),
-                            (resultMatrix[i + 1, 2] + deltaY * tt.maxOrNull()!!).roundToInt()
-                        )
-                    }
-                    Color.WHITE
                 }
             }
         }
@@ -190,6 +208,7 @@ class WindowDetectionTest : JPanel() {
 
     fun generateRandomVertices(count: Int) {
         points.clear()
+        pointCodes.clear()
         repeat(count) {
             val from = -450.0
             val until = 450.0

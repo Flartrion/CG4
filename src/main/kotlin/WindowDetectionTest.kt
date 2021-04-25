@@ -145,16 +145,16 @@ class WindowDetectionTest : JPanel() {
                     val deltaY = resultMatrix[i + 2, 2] - resultMatrix[i + 1, 2]
                     val tt = ArrayList<Double>()
                     var t = (limitWest - resultMatrix[i + 1, 1]) / deltaX
-                    if ((resultMatrix[i + 1, 2] + t * deltaY).roundToInt() in limitNorth..limitSouth)
+                    if ((resultMatrix[i + 1, 2] + t * deltaY).roundToInt() in limitNorth..limitSouth && t in 0.0..1.0)
                         tt += t
                     t = (limitEast - resultMatrix[i + 1, 1]) / deltaX
-                    if ((resultMatrix[i + 1, 2] + t * deltaY).roundToInt() in limitNorth..limitSouth)
+                    if ((resultMatrix[i + 1, 2] + t * deltaY).roundToInt() in limitNorth..limitSouth && t in 0.0..1.0)
                         tt += t
                     t = (limitNorth - resultMatrix[i + 1, 2]) / deltaY
-                    if ((resultMatrix[i + 1, 1] + t * deltaX).roundToInt() in limitWest..limitEast)
+                    if ((resultMatrix[i + 1, 1] + t * deltaX).roundToInt() in limitWest..limitEast && t in 0.0..1.0)
                         tt += t
                     t = (limitSouth - resultMatrix[i + 1, 2]) / deltaY
-                    if ((resultMatrix[i + 1, 1] + t * deltaX).roundToInt() in limitWest..limitEast)
+                    if ((resultMatrix[i + 1, 1] + t * deltaX).roundToInt() in limitWest..limitEast && t in 0.0..1.0)
                         tt += t
 
                     when (tt.size) {

@@ -47,7 +47,7 @@ class MainWindow : JFrame() {
             for (i in 0 until pointData.size()) {
                 bezierSurface.points.add(pointData[i])
             }
-            //bezierSurface.calculatePoints()
+            bezierSurface.regenerate()
             repaint()
         }
 

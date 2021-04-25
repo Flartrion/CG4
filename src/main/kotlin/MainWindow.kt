@@ -4,9 +4,8 @@ import javax.swing.*
 
 class MainWindow : JFrame() {
     private val pointData = DefaultListModel<Vertex>()
-    private val pointList = JList<Vertex>()
     private val bezierSurface = BezierSurface()
-    private val pointEditButton = JButton("Изменить")
+    private val pointEditButton = JButton("Отобразить")
 
     init {
         val inputPanel = JPanel()
@@ -35,58 +34,50 @@ class MainWindow : JFrame() {
         pointData.addElement(Vertex(150.0, 50.0, -50.0))
         pointData.addElement(Vertex(150.0, 0.0, -150.0))
 
-        pointList.model = pointData
-        pointList.selectionMode = ListSelectionModel.SINGLE_SELECTION
 
-        pointEditButton.addActionListener {
-            if (pointList.selectedValue != null)
-                PointChangeDialogue(this) {
-                    pointData[pointList.selectedIndex] = it
-                }
-            bezierSurface.contourPoints.clear()
-            for (i in 0 until pointData.size()) {
-                bezierSurface.contourPoints.add(pointData[i])
-            }
-            bezierSurface.calculatePoints()
-            repaint()
-        }
-
-        pointInput.add(JScrollPane(pointList))
+        pointInput.add(JLabel("Количество отрезков: ", 0))
+        pointInput.add(JTextField("15"))
         pointInput.add(pointEditButton)
 
-        val rotations = JPanel()
-        rotations.layout = GridLayout(2, 3)
+        val rectangleAttributes = JPanel()
+        rectangleAttributes.layout = GridLayout(7, 2)
 
-        val rotationX = JTextField("5")
-        val rotationY = JTextField("5")
-        val rotationXСonfirm = JButton("Повернуть")
-        val rotationYСonfirm = JButton("Повернуть")
+        val length = JTextField("5")
+        val width = JTextField("5")
+        val positionX = JTextField("10")
+        val positionY = JTextField("10 ")
+        val positionZ = JTextField("10")
+        val buildRectangle = JButton("Построить")
 
-        rotationXСonfirm.addActionListener {
-            bezierSurface.rotateOnX(rotationX.text.toDouble())
+        buildRectangle.addActionListener {
+            bezierSurface.rotateOnX(length.text.toDouble())
             repaint()
         }
-        rotationYСonfirm.addActionListener {
-            bezierSurface.rotateOnY(rotationY.text.toDouble())
-            repaint()
-        }
 
-        rotations.add(JLabel("X: ", 0))
-        rotations.add(rotationX)
-        rotations.add(rotationXСonfirm)
-        rotations.add(JLabel("Y: ", 0))
-        rotations.add(rotationY)
-        rotations.add(rotationYСonfirm)
+        rectangleAttributes.add(JLabel("Длина: ", 0))
+        rectangleAttributes.add(length)
+        rectangleAttributes.add(JLabel("Ширина: ", 0))
+        rectangleAttributes.add(width)
+        rectangleAttributes.add(JLabel("Позиция", 0))
+        rectangleAttributes.add(JLabel(" ", 0))
+        rectangleAttributes.add(JLabel("X: ", 0))
+        rectangleAttributes.add(positionX)
+        rectangleAttributes.add(JLabel("Y: ", 0))
+        rectangleAttributes.add(positionY)
+        rectangleAttributes.add(JLabel("Z: ", 0))
+        rectangleAttributes.add(positionZ)
+
+        rectangleAttributes.add(buildRectangle)
 
         val topLabels = JPanel()
         topLabels.layout = GridLayout(1, 2)
-        topLabels.add(JLabel("Точки поверхности", 0))
-        topLabels.add(JLabel("Повороты", 0))
+        topLabels.add(JLabel("Отрезки", 0))
+        topLabels.add(JLabel("Окно", 0))
 
         val inputZone = JPanel()
         inputZone.layout = GridLayout(1, 2)
         inputZone.add(pointInput)
-        inputZone.add(rotations)
+        inputZone.add(rectangleAttributes)
 
         inputPanel.add(topLabels, BorderLayout.NORTH)
         inputPanel.add(inputZone, BorderLayout.SOUTH)

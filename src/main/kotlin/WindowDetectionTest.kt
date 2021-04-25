@@ -181,7 +181,37 @@ class WindowDetectionTest : JPanel() {
                             )
                         }
                         1 -> {
-                            println(tt)
+                            if (pointCodes[i] == 0.toByte()) {
+                                g.color = Color(100, 100, 0)
+                                g.drawLine(
+                                    resultMatrix[i + 1, 1].roundToInt(),
+                                    resultMatrix[i + 1, 2].roundToInt(),
+                                    (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
+                                    (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
+                                )
+                                g.color = Color.WHITE
+                                g.drawLine(
+                                    resultMatrix[i + 2, 1].roundToInt(),
+                                    resultMatrix[i + 2, 2].roundToInt(),
+                                    (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
+                                    (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
+                                )
+                            } else {
+                                g.color = Color(100, 100, 0)
+                                g.drawLine(
+                                    resultMatrix[i + 2, 1].roundToInt(),
+                                    resultMatrix[i + 2, 2].roundToInt(),
+                                    (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
+                                    (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
+                                )
+                                g.color = Color.WHITE
+                                g.drawLine(
+                                    resultMatrix[i + 1, 1].roundToInt(),
+                                    resultMatrix[i + 1, 2].roundToInt(),
+                                    (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
+                                    (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
+                                )
+                            }
                         }
                         else -> {
                             g.color = Color.WHITE

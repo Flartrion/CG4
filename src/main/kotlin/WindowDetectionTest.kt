@@ -138,6 +138,7 @@ class WindowDetectionTest : JPanel() {
                     val deltaX = resultMatrix[i + 2, 1] - resultMatrix[i + 1, 1]
                     val deltaY = resultMatrix[i + 2, 2] - resultMatrix[i + 1, 2]
                     val tt = ArrayList<Double>()
+
                     var t = (limitWest - resultMatrix[i + 1, 1]) / deltaX
                     if ((resultMatrix[i + 1, 2] + t * deltaY).roundToInt() in limitNorth..limitSouth && t in 0.0..1.0)
                         tt += t
@@ -175,37 +176,22 @@ class WindowDetectionTest : JPanel() {
                             )
                         }
                         1 -> {
-                            if (pointCodes[i] == 0.toByte()) {
-                                g.color = Color(100, 100, 0)
-                                g.drawLine(
-                                    resultMatrix[i + 1, 1].roundToInt(),
-                                    resultMatrix[i + 1, 2].roundToInt(),
-                                    (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
-                                    (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
-                                )
-                                g.color = Color.WHITE
-                                g.drawLine(
-                                    resultMatrix[i + 2, 1].roundToInt(),
-                                    resultMatrix[i + 2, 2].roundToInt(),
-                                    (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
-                                    (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
-                                )
-                            } else {
-                                g.color = Color(100, 100, 0)
-                                g.drawLine(
-                                    resultMatrix[i + 2, 1].roundToInt(),
-                                    resultMatrix[i + 2, 2].roundToInt(),
-                                    (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
-                                    (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
-                                )
-                                g.color = Color.WHITE
-                                g.drawLine(
-                                    resultMatrix[i + 1, 1].roundToInt(),
-                                    resultMatrix[i + 1, 2].roundToInt(),
-                                    (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
-                                    (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
-                                )
-                            }
+                            val switch = if (pointCodes[i] == 0.toByte()) 0 else 1
+                            g.color = Color(100, 100, 0)
+                            g.drawLine(
+                                resultMatrix[i + 1 + switch, 1].roundToInt(),
+                                resultMatrix[i + 1 + switch, 2].roundToInt(),
+                                (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
+                                (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
+                            )
+                            g.color = Color.WHITE
+                            g.drawLine(
+                                resultMatrix[i + 2 - switch, 1].roundToInt(),
+                                resultMatrix[i + 2 - switch, 2].roundToInt(),
+                                (resultMatrix[i + 1, 1] + deltaX * tt[0]).roundToInt(),
+                                (resultMatrix[i + 1, 2] + deltaY * tt[0]).roundToInt()
+                            )
+
                         }
                         else -> {
                             g.color = Color.WHITE
